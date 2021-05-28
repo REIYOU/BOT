@@ -25,19 +25,30 @@ import DiscordUtils
 from AntiSpam import AntiSpamHandler
 import aiofiles
 import aiohttp
+import json
 # invie logging
 invites = {}
 last = ""
 #  initializing the bot 
+if os.path.exists(os.getcwd()+"./config2.json"):
+    with open("./config2.json") as f:
+        configData = json.load(f)
+else:
+    configTemplate = {"Token":"","Prefix":">>"}
+    with open(os.getcwd()+"./config2.json","w+")as f:
+        json.dump(configTemplate,f)
+token = configData["Token"]
+prefix = configData["Prefix"]
 intents = discord.Intents.default()
 intents.presences = True
 intents.members = True
-client = commands.Bot(command_prefix=">>",intents=intents)
+client = commands.Bot(command_prefix=prefix,intents=intents)
 client.remove_command("help")
 client.load_extension('cogs.fun')
 
 client.warnings = {} # guild_id : {member_id: [count, [(admin_id, reason)]]}
-    
+
+
 # help command 
 @client.group(invoke_without_command=True)
 async def help(ctx):
@@ -733,5 +744,5 @@ async def warnings(ctx, member: discord.Member=None):
 
 
 
-token= "ODQ3MDE2OTUxNTY2MDQxMDk4.YK38Ag.qqPQ6rNshEQXIg5nNqq7jla6nUI"
+
 client.run(token)   
